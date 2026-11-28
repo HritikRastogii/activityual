@@ -54,6 +54,63 @@
       name='';notes='';notice='Activity created';await loadDashboard();
     }catch(e:any){error=e.message;}
   }
+  let editId:any=null;
+  let editName='';
+  let editCategory='Personal';
+  let editFrequency='DAILY';
+  let editNotes='';
+
+  function startEdit(activity:any){
+    editId=activity.id??activity.activityId;
+    editName=activity.name??activity.title??'';
+    editCategory=activity.category??'Personal';
+    editFrequency=activity.frequency??'DAILY';
+    editNotes=activity.notes??activity.description??'';
+    error='';notice='';
+  }
+
+  function cancelEdit(){
+    editId=null;
+    editName='';editNotes='';
+  }
+
+  async function saveActivity(activity:any){
+    error='';notice='';
+    const id=activity.id??activity.activityId;
+    if(!id){error='Activity ID is missing';return;}
+    try{
+      await api('activities',`/api/v1/activities/${encodeURIComponent(id)}`,{
+        method:'PUT',
+        body:JSON.stringify({
+          name:editName.trim(),
+          description:editNotes,
+          category:editCategory,
+          frequency:editFrequency,
+          notes:editNotes,
+          active:activity.active??true
+        })
+      });
+      cancelEdit();
+      notice='Activity updated successfully';
+      await loadDashboard();
+    }catch(e:any){error=e.message??'Could not update activity';}
+  }
+
+  async function deleteActivity(activity:any){
+    error='';notice='';
+    const id=activity.id??activity.activityId;
+    if(!id){error='Activity ID is missing';return;}
+    if(!window.confirm(`Delete "${activity.name??'this activity'}"? This cannot be undone.`))return;
+    try{
+      await api('activities',`/api/v1/activities/${encodeURIComponent(id)}`,{
+        method:'DELETE'
+      });
+      if(editId===id)cancelEdit();
+      notice='Activity deleted successfully';
+      await loadDashboard();
+    }catch(e:any){error=e.message??'Could not delete activity';}
+  }
+
   async function track(activity:any,status:string){
     error='';notice='';
     try{
@@ -148,8 +205,31 @@
             <div class="activity-grid">
               {#each activities as activity,i (activity.id??activity.activityId??i)}
                 <div class="activity-item">
-                  <activity-card name={activity.name??activity.title??'Activity'} category={activity.category??'General'} frequency={activity.frequency??'Daily'} notes={activity.notes??''}></activity-card>
-                  <div class="activity-actions"><button class="complete" onclick={()=>track(activity,'COMPLETED')}>✓ Complete</button><button class="missed" onclick={()=>track(activity,'MISSED')}>Mark missed</button></div>
+                  {#if editId===(activity.id??activity.activityId)}
+                    <form class="edit-form" onsubmit={(e)=>{e.preventDefault();saveActivity(activity);}}>
+                      <h3>Edit activity</h3>
+                      <input aria-label="Activity name" bind:value={editName} required maxlength="150" />
+                      <select aria-label="Activity category" bind:value={editCategory}>
+                        <option>Personal</option><option>Health</option><option>Learning</option><option>Work</option><option>Fitness</option>
+                      </select>
+                      <select aria-label="Activity frequency" bind:value={editFrequency}>
+                        <option value="DAILY">Daily</option><option value="WEEKLY">Weekly</option><option value="MONTHLY">Monthly</option><option value="CUSTOM">Custom</option>
+                      </select>
+                      <input aria-label="Activity notes" placeholder="Notes (optional)" bind:value={editNotes} />
+                      <div class="activity-actions">
+                        <button class="primary" type="submit" disabled={busy}>Save changes</button>
+                        <button class="cancel" type="button" onclick={cancelEdit}>Cancel</button>
+                      </div>
+                    </form>
+                  {:else}
+                    <activity-card name={activity.name??activity.title??'Activity'} category={activity.category??'General'} frequency={activity.frequency??'Daily'} notes={activity.notes??''}></activity-card>
+                    <div class="activity-actions">
+                      <button type="button" class="complete" onclick={(e)=>{e.preventDefault();e.stopPropagation();track(activity,'COMPLETED');}}>✓ Complete</button>
+                      <button type="button" class="missed" onclick={(e)=>{e.preventDefault();e.stopPropagation();track(activity,'MISSED');}}>Mark missed</button>
+                      <button type="button" class="edit" onclick={(e)=>{e.preventDefault();e.stopPropagation();startEdit(activity);}}>✎ Edit</button>
+                      <button type="button" class="delete" onclick={(e)=>{e.preventDefault();e.stopPropagation();deleteActivity(activity);}}>Delete</button>
+                    </div>
+                  {/if}
                 </div>
               {/each}
             </div>
