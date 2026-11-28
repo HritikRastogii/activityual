@@ -1,0 +1,42 @@
+openapi: 3.0.3
+info:
+  title: Activityual Recommendation Service API
+  version: 1.0.0
+  description: Retrieves and accepts user recommendations. Current event-processor suggestions are rule-based consistency suggestions.
+servers:
+  - url: http://localhost:8085
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/recommendations:
+    get:
+      summary: List recommendations for the authenticated user
+      responses:
+        '200': {description: Recommendation objects}
+  /api/v1/recommendations/{recommendationId}:
+    get:
+      summary: Get a recommendation
+      parameters:
+        - in: path
+          name: recommendationId
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Recommendation object}
+        '404': {description: Recommendation not found}
+  /api/v1/recommendations/{recommendationId}/accept:
+    post:
+      summary: Accept a recommendation
+      parameters:
+        - in: path
+          name: recommendationId
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Accepted recommendation object}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

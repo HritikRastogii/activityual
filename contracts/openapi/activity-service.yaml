@@ -1,0 +1,65 @@
+openapi: 3.0.3
+info:
+  title: Activityual Activity Service API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/activities:
+    post:
+      summary: Create an activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+      responses:
+        '201': {description: Activity created}
+    get:
+      summary: List activities owned by the authenticated user
+      responses:
+        '200': {description: Activity list}
+  /api/v1/activities/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      summary: Get activity by ID
+      responses:
+        '200': {description: Activity found}
+        '404': {description: Activity not found}
+    put:
+      summary: Update activity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ActivityRequest'}
+      responses:
+        '200': {description: Activity updated}
+    delete:
+      summary: Delete activity
+      responses:
+        '204': {description: Activity deleted}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ActivityRequest:
+      type: object
+      required: [name, frequency, category]
+      properties:
+        name: {type: string, maxLength: 120}
+        description: {type: string, maxLength: 1000}
+        frequency: {type: string, description: "Frequency enum as defined by the service"}
+        category: {type: string, maxLength: 60}
+        notes: {type: string, maxLength: 2000}
+        active: {type: boolean, nullable: true}

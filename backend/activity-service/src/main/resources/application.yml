@@ -1,0 +1,35 @@
+server:
+  port: ${SERVER_PORT:8082}
+
+spring:
+  application:
+    name: activity-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/activityual_activity}
+    username: ${DB_USERNAME:activityual}
+    password: ${DB_PASSWORD:activityual_local_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:YWN0aXZpdHl1YWwtbG9jYWwtand0LXNlY3JldC1rZXktMzI=}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

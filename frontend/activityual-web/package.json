@@ -1,0 +1,25 @@
+{
+  "name": "activityual-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@activityual/web-components": "file:../web-components"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^6.0.0",
+    "@sveltejs/adapter-node": "^5.5.8",
+    "@sveltejs/kit": "^2.15.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "svelte": "^5.19.0",
+    "svelte-check": "^4.1.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.0"
+  }
+}

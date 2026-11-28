@@ -1,0 +1,37 @@
+name: activityual
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: activityual-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: activityual-dynamodb
+    restart: unless-stopped
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    working_dir: /home/dynamodblocal
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+
+volumes:
+  postgres_data:
+  dynamodb_data:

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ActivityMissed event detail",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "userEmail",
+    "activityId",
+    "trackingId",
+    "trackingDate",
+    "status",
+    "occurredAt"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "ActivityCompleted",
+        "ActivityMissed"
+      ]
+    },
+    "userEmail": {
+      "type": "string",
+      "format": "email"
+    },
+    "activityId": {
+      "type": "string"
+    },
+    "trackingId": {
+      "type": "string"
+    },
+    "trackingDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string"
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": true
+}

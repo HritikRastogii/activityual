@@ -36,3 +36,8 @@ logs/
 *.key
 credentials
 secrets/
+# Generated Lambda/package artifacts
+__pycache__/
+*.py[cod]
+*.zip
+# Local environment and generated tool state

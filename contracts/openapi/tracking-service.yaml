@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: Activityual Tracking Service API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8083
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/tracking:
+    post:
+      summary: Create a tracking record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TrackingRequest'}
+      responses:
+        '201': {description: Tracking record created}
+    get:
+      summary: List tracking records
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema: {type: string, format: date}
+      responses:
+        '200': {description: Tracking records}
+  /api/v1/tracking/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: {type: string, format: uuid}
+    get:
+      summary: Get tracking record
+      responses:
+        '200': {description: Tracking record}
+    put:
+      summary: Update tracking record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TrackingRequest'}
+      responses:
+        '200': {description: Updated tracking record}
+  /api/v1/tracking/activity/{activityId}:
+    get:
+      summary: List tracking records for an activity
+      parameters:
+        - in: path
+          name: activityId
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200': {description: Tracking records for activity}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TrackingRequest:
+      type: object
+      required: [activityId, trackingDate, status]
+      properties:
+        activityId: {type: string, format: uuid}
+        trackingDate: {type: string, format: date}
+        status: {type: string, description: "TrackingStatus enum as defined by the service"}
+        notes: {type: string, maxLength: 1000}

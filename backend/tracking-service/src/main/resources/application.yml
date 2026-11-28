@@ -1,0 +1,39 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: tracking-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/activityual_tracking}
+    username: ${DB_USERNAME:activityual}
+    password: ${DB_PASSWORD:activityual_local_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:YWN0aXZpdHl1YWwtbG9jYWwtand0LXNlY3JldC1rZXktMzI=}
+  aws:
+    region: ${AWS_REGION:ap-south-1}
+  outbox:
+    publisher:
+      enabled: ${OUTBOX_PUBLISHER_ENABLED:false}
+      event-bus-name: ${EVENT_BUS_NAME:activityual-events}
+      batch-size: ${OUTBOX_BATCH_SIZE:10}
+      interval-ms: ${OUTBOX_INTERVAL_MS:5000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

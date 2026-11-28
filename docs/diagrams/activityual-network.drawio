@@ -1,0 +1,36 @@
+<mxfile host="app.diagrams.net" modified="2026-11-28T00:00:00.000Z" agent="Activityual" version="24.7.17">
+  <diagram id="activityual-network" name="Activityual Network">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="vpc" value="AWS Region: ap-south-1&#xa;Activityual VPC / ECS environment&#xa;(verify actual subnet layout in AWS Console)" style="swimlane;html=1;rounded=1;startSize=30;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="250" y="80" width="1100" height="760" as="geometry"/></mxCell>
+        <mxCell id="users" value="Users / Browser&#xa;Activityual SvelteKit UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1"><mxGeometry x="30" y="350" width="170" height="80" as="geometry"/></mxCell>
+        <mxCell id="alb" value="Application Load Balancer&#xa;Listener rules / Target Groups" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="vpc"><mxGeometry x="40" y="300" width="200" height="90" as="geometry"/></mxCell>
+        <mxCell id="front" value="Frontend ECS Service&#xa;SvelteKit / Lit&#xa;Port 3000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="vpc"><mxGeometry x="300" y="80" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="auth" value="Auth Service&#xa;Spring Boot / JWT&#xa;8081" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="vpc"><mxGeometry x="300" y="220" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="activity" value="Activity Service&#xa;Spring Boot&#xa;8082" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="vpc"><mxGeometry x="550" y="220" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="tracking" value="Tracking Service&#xa;Spring Boot + Outbox&#xa;8083" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="vpc"><mxGeometry x="800" y="220" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="analytics" value="Analytics Service&#xa;Spring Boot&#xa;8084" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="vpc"><mxGeometry x="550" y="440" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="recommend" value="Recommendation Service&#xa;Spring Boot&#xa;8085" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="vpc"><mxGeometry x="800" y="440" width="190" height="80" as="geometry"/></mxCell>
+        <mxCell id="rds" value="Amazon RDS PostgreSQL&#xa;Auth / Activity / Tracking data" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="vpc"><mxGeometry x="300" y="600" width="220" height="100" as="geometry"/></mxCell>
+        <mxCell id="ddb" value="Amazon DynamoDB&#xa;ActivityAnalytics&#xa;ActivityRecommendations&#xa;ActivityProcessedEvents" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="vpc"><mxGeometry x="700" y="600" width="250" height="110" as="geometry"/></mxCell>
+        <mxCell id="eventbridge" value="Amazon EventBridge&#xa;activityual-events bus / rules" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="vpc"><mxGeometry x="1000" y="220" width="180" height="80" as="geometry"/></mxCell>
+        <mxCell id="lambda" value="AWS Lambda&#xa;Activity Event Processor&#xa;Python 3.12" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="vpc"><mxGeometry x="1000" y="440" width="180" height="80" as="geometry"/></mxCell>
+        <mxCell id="e1" style="endArrow=block;html=1;rounded=0;" edge="1" parent="1" source="users" target="alb"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="front"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="auth"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="activity"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="tracking"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="analytics"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="endArrow=block;html=1;" edge="1" parent="vpc" source="alb" target="recommend"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="Relational data" style="endArrow=block;html=1;" edge="1" parent="vpc" source="auth" target="rds"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;" edge="1" parent="vpc" source="activity" target="rds"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" value="Outbox events" style="endArrow=block;html=1;" edge="1" parent="vpc" source="tracking" target="eventbridge"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" style="endArrow=block;html=1;" edge="1" parent="vpc" source="eventbridge" target="lambda"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" value="Transactional writes" style="endArrow=block;html=1;" edge="1" parent="vpc" source="lambda" target="ddb"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" style="endArrow=block;html=1;" edge="1" parent="vpc" source="analytics" target="ddb"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" style="endArrow=block;html=1;" edge="1" parent="vpc" source="recommend" target="ddb"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

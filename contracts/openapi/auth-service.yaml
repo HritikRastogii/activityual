@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: Activityual Auth Service API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+security: []
+paths:
+  /api/v1/auth/register:
+    post:
+      summary: Register a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fullName, email, password]
+              properties:
+                fullName: {type: string, maxLength: 100}
+                email: {type: string, format: email}
+                password: {type: string, minLength: 8, maxLength: 72}
+      responses:
+        '201': {description: User registered and access token returned}
+  /api/v1/auth/login:
+    post:
+      summary: Authenticate a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: {type: string, format: email}
+                password: {type: string}
+      responses:
+        '200': {description: Authentication response containing accessToken, tokenType, expiresIn and user}
+        '401': {description: Invalid credentials}
+  /api/v1/auth/me:
+    get:
+      security: [{bearerAuth: []}]
+      summary: Get authenticated user
+      responses:
+        '200': {description: User profile}
+  /api/v1/auth/validate:
+    post:
+      summary: Validate bearer token
+      parameters:
+        - in: header
+          name: Authorization
+          required: false
+          schema: {type: string}
+      responses:
+        '200': {description: Token valid}
+        '401': {description: Missing or invalid token}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
